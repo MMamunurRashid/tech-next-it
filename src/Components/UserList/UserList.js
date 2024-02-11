@@ -17,17 +17,24 @@ const UserList = () => {
     fetch(apiUrl)
       .then((res) => res.json())
       .then((data) => {
-        setUserData(data.users);
+        // Sort data based on sortOption
+        const sortedData = sortUserData(data.users, sortOption);
+        setUserData(sortedData);
         setIsLoading(false);
       });
-  }, [searchInput]);
+  }, [searchInput, sortOption]);
 
-  
+  const sortUserData = (data, sortOption) => {
+    return [...data].sort((a, b) => {
+      if (a[sortOption] < b[sortOption]) return -1;
+      if (a[sortOption] > b[sortOption]) return 1;
+      return 0;
+    });
+  };
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
   };
-
   return (
     <div>
       {/* search box  */}
@@ -36,25 +43,25 @@ const UserList = () => {
           <input
             type="text"
             placeholder="Search"
-            className="input input-bordered join-item"
+            className="input input-bordered input-sm md:input-md lg:w-72  join-item"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button className="btn btn-warning join-item" onClick={() => setSearchInput("")}>
+          <button className="btn btn-sm md:btn-md  btn-warning join-item" onClick={() => setSearchInput("")}>
             Clear
           </button>
-          <button className="btn btn-primary join-item" onClick={() => setSearchInput(searchInput)}>
+          <button className="btn  btn-sm md:btn-md  btn-primary join-item" onClick={() => setSearchInput(searchInput)}>
             Search
           </button>
         </div>
       </div>
 
-      <div className="flex justify-between my-5 mx-10">
-        <h1 className="text-xl font-serif font-semibold ml-5">Users List: </h1>
+      <div className="flex justify-between items-center gap-2 lg:gap-0 my-2 mx-2 md:my-3 md:mx-5 lg:my-5 lg:mx-10">
+        <h1 className="text-sm  md:text-md lg:text-xl font-serif font-semibold lg:ml-5">Users List: </h1>
         {/* Sorting dropdown */}
         <div className="flex justify-center">
           <select
-            className="select select-bordered w-64"
+            className="select select-sm md:select-md  select-bordered lg:w-64 md:w-40"
             value={sortOption}
             onChange={handleSortChange}
           >
@@ -63,7 +70,7 @@ const UserList = () => {
             <option value="company">Sort by Company Name</option>
           </select>
         </div>
-        <button onClick={()=>document.getElementById('add-user').showModal()} className="btn btn-primary">Add New User</button>
+        <button onClick={()=>document.getElementById('add-user').showModal()} className="btn  btn-sm md:btn-md  btn-primary">Add New User</button>
       </div>
       {/* users card  */}
       {loading ? (

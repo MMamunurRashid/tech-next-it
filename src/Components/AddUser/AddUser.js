@@ -1,4 +1,5 @@
 import React from "react";
+import toast from "react-hot-toast";
 
 const AddUser = () => {
   const imgbbKey = "18a8d0f77a7a7c4643e1e64714b6915a";
@@ -40,8 +41,14 @@ const AddUser = () => {
             body: JSON.stringify(userDetails),
           })
             .then((res) => res.json())
-            .then(console.log);
-            document.getElementById('add-user').close()
+            .then((data) => {
+              if (data.id) {
+                toast.success(`${data.firstName} ${data.lastName} As New User Added.`);
+                document.getElementById("add-user").close();
+              }else{
+                toast.error("Something is wrong during New User Add.")
+              }
+            });
         } else {
           console.error("Image upload failed:", imgData.error);
         }
